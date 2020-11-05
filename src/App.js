@@ -1,90 +1,69 @@
 import './App.css';
 import React from "react";
-import ReactDom from 'react-dom';
-import HeaderCompoent from './components/header'
-
 
 class App extends React.Component{
 
-    //构造函数
-    constructor(props) {
-        super(props);
+    constructor(){
+        super();
+
         this.state={
-            boxShow:true,
-            goods:[
-                {id:1,name:'qwe'},
-                {id:2,name:'wer'},
-                {id:3,name:'ert'}
-            ]
+            users:[
+                {name:'张三',sex:'男',checked:false},
+                {name:'李四',sex:'男',checked:true},
+                {name:'王五',sex:'女',checked:false},
+                {name:'冯六',sex:'女',checked:false},
+            ],
+
+            allChecked:false
         }
     }
 
-    //生命周期函数
+    selectUser(index){
+        let tempUsers=this.state.users;
+        tempUsers[index].checked=true;
 
-    //页面将要加载
-    UNSAFE_componentWillMount (){
-        console.log('componentWillMount');
-    };
-
-
-    //更新
-    shouldComponentUpdate(newProps,newStates){
-
+        this.setState({users:tempUsers})
     }
 
-
-    componentDidMount(){
-        console.log(this.refs.red);
-
-        //获取真是Dmo，耗费性能
-        // let header=document.getElementById('header');
-        // console.log(header)
-
-        //获取虚拟dmo，
-        let header=ReactDom.findDOMNode(document.getElementById('header'));
-        console.log(header.innerhtml);
-    };
-
-    changeShow(){
-        this.setState({boxShow:!this.state.boxShow})
+    selectAllUser(){
+        this.setState({allChecked:true})
     }
+
 
     render(){
-
-        //  输出变量
-        const name='张三';
-        //输出html标签
-        const test="<span style='color:red'>红苹果</span>"
-
-        const {boxShow}=this.state;
-
-        let boxItem=boxShow?<div className='box'></div>:"";
+        const {allChecked}=this.state;
 
         return (
             <div className="App">
-                {/*<HeaderCompoent title='er' ></HeaderCompoent>*/}
-                <HeaderCompoent  ></HeaderCompoent>
+                <table width="100%" border="1" cellSpacing="0" cellPadding="0">
 
-                {name}
-                <br/>
+                    <tbody>
+                        <tr style={{color:"white",fontSize:"14px"}}>
+                            <td height='40px' align='center' bgcolor="#0099cc" ><input type='checkbox'
+                                 checked={allChecked} onChange={this.selectAllUser.bind(this)}/>全选</td>
+                            <td align='center' bgcolor="#0099cc" >姓名</td>
+                            <td align='center' bgcolor="#0099cc" >管理</td>
+                        </tr>
 
-                <div dangerouslySetInnerHTML={{__html:test}}></div>
+                        {
+                            this.state.users.map((item,index)=>{
+                                return (
+                                    <tr key={index}>
+                                        <td height='40px' align='center' ><input type='checkbox' checked={item.checked}
+                                            onChange={this.selectUser.bind(this,index)} /></td>
+                                        <td align='center' >{item.name}</td>
+                                        <td align='center' >删除</td>
+                                     </tr>
+                                )
+                            })
+                        }
 
-                <button type='button' onClick={this.changeShow.bind(this)}>{boxShow?"隐藏方块":"显示方块"}</button>
 
-                { boxShow && (<div className='box'></div>)  }
+                    </tbody>
 
-                {/*{boxItem}*/}
 
-                <ul>
-                    {
-                        this.state.goods.map((item,index)=>{
-                            return(
-                                <li key={index}>{item.name}</li>
-                            )
-                        })
-                    }
-                </ul>
+                </table>
+
 
             </div>
         );
